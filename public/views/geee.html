@@ -1,0 +1,224 @@
+<div class="block-header">
+	<div class="row remove-margin">
+		<div class="col-xs-6">
+			<a ui-sref="tag({id: geeeSingle.tag._id})" class="header-title-link" ng-click="scrollToGeees()">
+				<h1>
+					<i ng-class="'icon-'+geeeSingle.tag.name" class="animation-expandUp"></i>
+					{{ geeeSingle.tag.name=='nodejs' && 'node.js' || geeeSingle.tag.name }}
+					<br>
+					<small>帖子</small>
+				</h1>
+			</a>
+		</div>
+		<div class="col-xs-6">
+			<a ui-sref="geee({id: geeeSingle._id})" class="header-link" id="refresh-btn">
+				<h1 class="animation-pullDown">
+					<i class="icon-refresh"></i>
+					<br>
+					<small>更新</small>
+				</h1>
+			</a>
+		</div>
+	</div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+	<li>
+		<i class="icon-bookmark"></i>
+	</li>
+	<li>
+		<a ui-sref="tag({id: geeeSingle.tag._id})">{{ geeeSingle.tag.name=='nodejs' && 'node.js' || geeeSingle.tag.name }}</a>
+	</li>
+	<li>
+		<a ui-sref="geee({id: geeeSingle._id})">{{ geeeSingle.title}}</a>
+	</li>
+</ul>
+<div class="block" ng-controller="GeeeCtrl">
+	<div class="profile-status block-top">
+		<div class="row">
+			<form action="" name="formGeee" method="post" class="col-lg-offset-4 col-lg-4 form-horizontal" >
+				<div class="row">
+					<div class="form-group">
+						<div class="input-group col-sm-8">
+							<span class="input-group-addon"><i class="icon-user"></i></span>
+							<input type="text" class="form-control" placeholder="ID" ng-model="geee.idd" placeholder-ipt required>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group col-sm-8">
+							<span class="input-group-addon"><i class="icon-envelope"></i></span>
+							<input type="text" class="form-control" placeholder="Email" ng-model="geee.email" placeholder-ipt required>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group col-sm-8">
+							<span class="input-group-addon"><i class="icon-bookmark"></i></span>
+							<input type="text" class="form-control" placeholder="标题" ng-model="geee.title" placeholder-ipt required>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group col-sm-12">
+							<span class="input-group-addon"><i class="icon-quote-left"></i></span>
+							<textarea rows="2" class="form-control" placeholder="你在想什么？" ng-model="geee.content" placeholder-ipt required></textarea>
+						</div>
+					</div>
+
+					<div class="image-zone form-group animation-hatch text-center" ng-show="imagezone" dropzone>
+						<div class="dz-default dz-message">
+							
+						</div>
+					</div>
+
+					<div class="codezone" ng-show="codezone">
+						
+						<div class="input-group col-sm-12" title="代码类型" tooltip>
+							<select placeholder="代码类型" class="form-control" size="1" ng-model="geee.code.type" ng-options="t.name as t.name for t in tags" placeholder-ipt>
+								
+							</select>
+						</div>
+					
+						<div class="input-group col-sm-12">
+							<textarea ng-model="geee.code.content" codemirror></textarea>
+						</div>
+						
+					</div>
+
+					<div class="clearfix">
+						<button type="submit" class="btn btn-primary pull-right" ng-click="publish(geee, geeeSingle.tag)" ng-disabled="formGeee.$invalid">发布</button>
+
+						<a href="javascript:void(0)" class="btn btn-link btn-icon" data-toggle="tooltip" data-placement="bottom" title="图片" ng-click="imagezone = !imagezone" tooltip>
+							<i class="icon-picture"></i>
+						</a>
+						<a href="javascript:void(0)" class="btn btn-link btn-icon" data-toggle="tooltip" data-placement="bottom" title="代码" ng-click="codezone = !codezone" tooltip>
+							<i class="icon-rocket"></i>
+						</a>
+					</div>
+
+					
+					
+				</div>	
+			</form>
+
+
+		</div>
+	</div>
+	<div id="geees"></div>
+	<ul class="timeline row">
+		<li class="col-lg-6 col-lg-offset-3">
+			<div class="timeline-item">
+				<div class="timeline-title media">
+					
+					<img ng-src="{{getAvatarUrl(geeeSingle.email)}}" class="media-object img-circle pull-left" width="50"/>
+					<div class="media-body">
+						<small class="timeline-meta">{{ geeeSingle.createdtime.sec | fromNowFilter}}</small>
+						<a href="#">{{geeeSingle.idd}}</a>
+						<h4><a href="">{{geeeSingle.title}}</a></h4>
+
+					</div>
+					
+				</div>
+				<div class="timeline-content">
+					<p class="clearfix">
+						{{geeeSingle.content}}
+					</p>
+
+					<pre ng-show="geeeSingle.code.content"><code ng-class="geeeSingle.code.type" code-hightlight>{{geeeSingle.code.content}}</code></pre>
+					<div class="gallery" magnific>
+                        <div class="row">
+                            <div class="col-sm-4" ng-repeat="image in geeeSingle.images">
+                                <a ng-href="{{getImageUrl(image)}}" class="gallery-link" title="图片" >
+                                    <img ng-src="{{getImageUrl(image)+'-thumb'}}" alt="{{image}}">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+					<a href="javascript:void(0)" class="btn btn-xs btn-info" ng-click="commentzone = !commentzone" tooltip title="评论"><i class="icon-comment"></i></a>
+					<a href="javascript:void(0)" ng-click="like(geeeSingle)" class="btn btn-xs btn-success" tooltip title="赞"><i class="icon-thumbs-up"></i> {{geeeSingle.likes}}</a>
+
+					<form action="" name="formComment" method="post" class="col-lg-12 form-horizontal animation-fadeIn" ng-show="commentzone" ng-controller="CommentCtrl" ng-init="comment.geee = geeeSingle;comment.code.type=geeeSingle.tag.name;">
+						<div class="row">
+							<div class="form-group">
+								<div class="input-group col-sm-8">
+									<span class="input-group-addon"> <i class="icon-user"></i>
+									</span>
+									<input type="text" class="form-control" placeholder="ID" ng-model="comment.idd" placeholder-ipt required></div>
+								</div>
+
+							<div class="form-group">
+								<div class="input-group col-sm-8">
+									<span class="input-group-addon"> <i class="icon-envelope"></i>
+									</span>
+									<input type="text" class="form-control" placeholder="Email" ng-model="comment.email" placeholder-ipt required></div>
+							</div>
+
+							<div class="form-group">
+								<div class="input-group col-sm-12">
+
+									<span class="input-group-addon">
+										<i class="icon-quote-left"></i>
+									</span>
+									<textarea rows="2" class="form-control" placeholder="评论一下" ng-model="comment.content" placeholder-ipt required></textarea>
+								</div>
+							</div>
+							<div class="image-zone form-group animation-hatch text-center" images="comment.images" ng-show="imagezonec" dropzone>
+								<div class="dz-default dz-message"></div>
+							</div>
+							<div class="codezone" ng-show="codezonec">
+								<div class="input-group col-sm-12" title="代码类型" tooltip>
+									<select class="form-control" size="1" ng-model="comment.code.type" ng-options="t.name as t.name for t in tags"></select>
+								</div>
+								<div class="input-group col-sm-12">
+									<textarea ng-model="comment.code.content" codemirror></textarea>
+								</div>
+							</div>
+							<div class="clearfix">
+								<button type="submit" class="btn btn-primary pull-right" ng-click="cmt(comment, geeeSingle)" ng-disabled="formComment.$invalid">发布</button>
+
+								<a href="javascript:void(0)" class="btn btn-link btn-icon" data-placement="bottom" title="图片" ng-click="imagezonec = !imagezonec" tooltip>
+
+									<i class="icon-picture"></i>
+
+								</a>
+
+								<a href="javascript:void(0)" class="btn btn-link btn-icon" data-placement="bottom" title="代码" ng-click="codezonec = !codezonec" tooltip>
+									<i class="icon-rocket"></i>
+								</a>
+							</div>
+						</div>
+					</form>
+
+					
+					<div class="line line-dashed"></div>
+						
+
+					<div class="media" ng-repeat="c in geeeSingle.comments">
+						<a href="javascript:void(0)" class="pull-left">
+							<img ng-src="{{getAvatarUrl(c.email)}}" alt="{{c.idd}}" class="media-object img-circle" width="40">
+						</a>
+						<div class="media-body">
+							<h5>{{c.idd}}
+								<span class="label label-default"><i class="icon-time"></i> {{c.createdtime.sec | fromNowFilter}}</span>
+							</h5>
+							<p class="remove-margin">{{c.content}}</p>
+
+							<pre ng-show="c.code.content"><code ng-class="c.code.type" code-hightlight>{{c.code.content}}</code></pre>
+							<div class="gallery" magnific>
+	                            <div class="row">
+	                                <div class="col-sm-4" ng-repeat="image in c.images">
+	                                    <a ng-href="{{getImageUrl(image)}}" class="gallery-link" title="图片" >
+	                                        <img ng-src="{{getImageUrl(image)+'-thumb'}}" alt="{{image}}">
+	                                    </a>
+	                                </div>
+	                            </div>
+	                        </div>
+						</div>
+						<div class="line line-dashed" ng-hide="$last"></div>
+					</div>
+
+				</div>
+			</div>
+		</li>
+
+	</ul>
+</div>

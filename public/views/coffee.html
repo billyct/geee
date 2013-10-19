@@ -1,0 +1,57 @@
+<div class="block-header">
+	<a href="#" class="header-title-link">
+		<h1> <i class="glyphicon-fishes animation-expandUp"></i>
+			echo
+			<br>
+			<small>"symfony2 is fast,but you can still f*** that up !"</small>
+		</h1>
+	</a>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+	<li> <i class="icon-file-alt"></i>
+	</li>
+	<li>喝杯咖啡</li>
+</ul>
+
+<div class="row gutter30">
+	<div class="col-md-6">
+		<div class="block">
+			<div class="block-title">
+				<h2>
+					<i class="icon-bolt"></i>
+					标签
+				</h2>
+			</div>
+			<p class="row">
+				<a ng-href="#/tag/{{t._id}}" class="label-coffee col-lg-3" ng-repeat="t in tags">
+					<i ng-class="'icon-'+t.name"></i>
+					<span>{{ t.name=='nodejs' && 'node.js' || t.name }}</span>
+				</a>
+			</p>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="block full">
+			<div class="ms-message">
+				<div class="clearfix">
+					<img src="img/logo.png" alt="avatar" class="img-circle pull-right">
+					<h3>
+						什么是GEEE?
+						<small>
+							<br>
+							<a href="#">billyct</a>
+						</small>
+					</h3>
+					<br>
+					<small> <em>1970年0点0分</em>
+					</small>
+				</div>
+				<div class="ms-message-content">
+					<p>geeks,</p>
+					<p>GEEE就是geek，回归原始，回到1970年0点0分，我们本着分享精神，分享我们的经验和技术，大道至简。</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

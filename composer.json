@@ -1,0 +1,20 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+        "slim/views": "0.1.*",
+        "twig/twig": "~1.13",
+        "kriswallsmith/assetic": "1.2.*@dev"
+    },
+
+    "autoload": {
+        "psr-0": {
+        	"Gee": "src/"
+        },
+        "files": [
+            "config/mongodb.php",
+            "config/geee.php",
+            "src/qiniu/rs.php",
+            "src/qiniu/io.php"
+        ]
+    }
+}

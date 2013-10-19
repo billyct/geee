@@ -1,0 +1,24 @@
+<div class="sidebar-content">
+
+  <div class="sidebar-left-scroll" slimscroll>
+    <ul class="sidebar-nav">
+      <li>
+        <h2 class="sidebar-header">{geee.in}</h2>
+      </li>
+      <li class="active">
+        <a ui-sref="coffee"> <i class="icon-coffee"></i>
+          喝杯咖啡
+        </a>
+      </li>
+      <li>
+        <h2 class="sidebar-header">标签</h2>
+      </li>
+      <li ng-repeat="t in tags">
+        <a ui-sref="tag({id: t._id})" class="menu-link"> <i ng-class="'icon-'+t.name"></i>{{ t.name=='nodejs' && 'node.js' || t.name }}
+          <span>{{t.count}}</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</div>

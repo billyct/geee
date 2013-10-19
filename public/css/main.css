@@ -1,0 +1,45 @@
+.label-coffee {
+	font-size: 50px;
+	color: #555;
+	padding: 10px;
+}
+
+.label-coffee:hover {
+	color: #08c;
+	text-decoration: none;
+	background: #fcfcfc;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	box-shadow: 0 0 8px #ddd;
+	-webkit-transition: box-shadow 0.2s ease-in-out;
+	-moz-transition: box-shadow 0.2s ease-in-out;
+	-o-transition: box-shadow 0.2s ease-in-out;
+	transition: box-shadow 0.2s ease-in-out;
+}
+
+.label-coffee span {
+	font-size: 14px;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.codezone {
+	border: 1px dashed #ccc;
+	padding: 5px 0;
+	margin-bottom: 5px;
+}
+
+
+.line{*width:100%;height:2px;margin:10px 0;font-size:0;overflow:hidden;background-color:transparent;border-width:0;border-top:1px solid #eaedef;}
+.line-xs{margin:0;}.line-lg{margin-top:15px;margin-bottom:15px;}.line-dashed{border-style:dashed;background:transparent;}
+
+/*.image-zone .dz-default.dz-message a {
+	color: #555;
+}
+
+.image-zone .dz-default.dz-message a:hover {
+	text-decoration: none;
+}*/
