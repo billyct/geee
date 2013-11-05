@@ -9,4 +9,5 @@ geee
 
 php composer.phar install
 
-修改config/* 的配置
+修改  /config/mongo.php 的配置连接mongodb
+修改 /src/qiniu/conf.php 的配置连接七牛云存储
