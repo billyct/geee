@@ -1,8 +1,26 @@
-<?php 
+<?php
 require '../vendor/autoload.php';
 
 use \Gee\Mongo;
 use \Gee\Qiniu;
+
+
+/*初始化tag数据库*/
+$tags = Mongo::getInstance()->mongoList('tags');
+
+if($tags['total'] === 0) {
+
+    $tags = array(
+        array('name' => 'nodejs', 'count' => 0),
+        array('name' => 'php', 'count' => 0),
+        array('name' => 'meteor', 'count' => 0),
+        array('name' => 'go', 'count' => 0)
+    );
+
+    foreach($tags as $tag) {
+        $result = Mongo::getInstance()->create('tags', $tag);
+    }
+}
 
 
 /*配置twig，也就是view层*/
@@ -34,6 +52,10 @@ $css = $assetic['css'];
 $js = $assetic['js'];
 
 
+
+
+
+
 /** 单页面入口*/
 $app->get('/', function () use ($app, $css, $js) {
 
@@ -42,7 +64,7 @@ $app->get('/', function () use ($app, $css, $js) {
 	// $collation = \Gee\Mongo::getInstance()->create('tags', $tag);
 
     $app->render('index.html', array(
-    	'css_path' => $css->getTargetPath(), 
+    	'css_path' => $css->getTargetPath(),
     	'js_path' => $js->getTargetPath()
     	));
 });
@@ -59,7 +81,7 @@ $app->group($api_prefix, function () use ($app) {
             $tags = $tags['results'];
             foreach ($tags as $key => $tag) {
                 $tagRef = \MongoDBRef::create('tags', new \MongoId($tag['_id']));
-                $tags[$key]['count'] = Mongo::getInstance()->mongoCollectionCount('geees', array('tag' => $tagRef)); 
+                $tags[$key]['count'] = Mongo::getInstance()->mongoCollectionCount('geees', array('tag' => $tagRef));
             }
             echo json_encode($tags);
         });
@@ -95,7 +117,7 @@ $app->group($api_prefix, function () use ($app) {
                     ),
                     'sort' => array(
                         'createdtime' => -1
-                    ) 
+                    )
                 );
                 $comments = Mongo::getInstance()->mongoList('comments', $selectComments);
                 if (!isset($geees[$key]['comments'])) {
@@ -174,13 +196,18 @@ $app->group($api_prefix, function () use ($app) {
                 ),
                 'sort' => array(
                     'createdtime' => -1
-                ) 
+                )
             );
 
             $comments = Mongo::getInstance()->mongoList('comments', $selectComments);
             echo json_encode($comments['results']);
         });
     });
+
+
+
+
+
 
     $app->group('/comments', function() use ($app) {
         $app->post('/', function() use ($app) {

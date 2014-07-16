@@ -3,13 +3,13 @@
 namespace Gee;
 
 class Mongo {
-	
+
 	/**
 	 *  静态成品变量 保存全局实例
 	 *  @access private
 	 */
 	static private $_instance = NULL;
-	
+
 	private $_db = null;
 	private $_conn = null;
 	/**
@@ -17,17 +17,17 @@ class Mongo {
 	 */
 	private function __construct() {
 		try {
-			$this->_conn = new \Mongo(MONGO_HOST);
+			$this->_conn = new \MongoClient(MONGO_HOST);
 			$this->_db = $this->_conn->{MONGO_DB};
 		} catch ( \MongoConnectionException $e ) {
 			$resultback = array('error' => 'Error connecting to MongoDB server');
             $resultback = json_encode($resultback);
 			die($resultback);
 		}
-		
+
 	}
 
-	
+
 	/**
 	 *  私有化克隆函数，防止外界克隆对象
 	 */
@@ -50,9 +50,9 @@ class Mongo {
 			$collection = $this->_db->{$collection};
 			$collection->insert ( $document );
 			$this->_conn->close ();
-			
+
 			$document ['_id'] = $document ['_id']->{'$id'};
-			
+
 			return $document;
 		} catch ( \MongoException $e ) {
 			$resultback = array('error' => $e->getMessage());
@@ -60,23 +60,23 @@ class Mongo {
 			die($resultback);
 		}
 	}
-	
+
 	/**
 	 * Read (findOne)
 	 */
 	public function read($collection, $id) {
 		try {
 			$collection = $this->_db->{$collection};
-			
+
 			$criteria = array (
-					'_id' => new \MongoId ( $id ) 
+					'_id' => new \MongoId ( $id )
 			);
-			
+
 			$document = $collection->findOne ( $criteria );
 			$this->_conn->close ();
-			
+
 			$document ['_id'] = $document ['_id']->{'$id'};
-			
+
 			return $document;
 		} catch ( \MongoException $e ) {
 			$resultback = array('error' => $e->getMessage());
@@ -84,28 +84,28 @@ class Mongo {
 			die($resultback);
 		}
 	}
-	
+
 	/**
 	 * Update (set properties)
 	 */
 	public function updateSet($collection, $id, $document) {
 		try {
 			$collection = $this->_db->{$collection};
-			
+
 			$criteria = array (
-					'_id' => new \MongoId ( $id ) 
+					'_id' => new \MongoId ( $id )
 			);
-			
+
 			// make sure that an _id never gets through
 			unset ( $document ['_id'] );
-			
+
 			$collection->update ( $criteria, array (
-					'$set' => $document 
+					'$set' => $document
 			) );
 			$this->_conn->close ();
-			
+
 			$document ['_id'] = $id;
-			
+
 			return $document;
 		} catch ( \MongoException $e ) {
 			$resultback = array('error' => $e->getMessage());
@@ -120,21 +120,21 @@ class Mongo {
 	public function updatePush($collection, $id, $document) {
 		try {
 			$collection = $this->_db->{$collection};
-			
+
 			$criteria = array (
-					'_id' => new \MongoId ( $id ) 
+					'_id' => new \MongoId ( $id )
 			);
-			
+
 			// make sure that an _id never gets through
 			unset ( $document ['_id'] );
-			
+
 			$collection->update ( $criteria, array (
-					'$push' => $document 
+					'$push' => $document
 			) );
 			$this->_conn->close ();
-			
+
 			$document ['_id'] = $id;
-			
+
 			return $document;
 		} catch ( \MongoException $e ) {
 			$resultback = array('error' => $e->getMessage());
@@ -149,19 +149,19 @@ class Mongo {
 	public function update($collection, $id, $document) {
 		try {
 			$collection = $this->_db->{$collection};
-			
+
 			$criteria = array (
-					'_id' => new \MongoId ( $id ) 
+					'_id' => new \MongoId ( $id )
 			);
-			
+
 			// make sure that an _id never gets through
 			unset ( $document ['_id'] );
-			
+
 			$collection->update ( $criteria, $document );
 			$this->_conn->close ();
-			
+
 			$document ['_id'] = $id;
-			
+
 			return $document;
 		} catch ( \MongoException $e ) {
 			$resultback = array('error' => $e->getMessage());
@@ -169,7 +169,7 @@ class Mongo {
 			die($resultback);
 		}
 	}
-	
+
 	/**
 	 * Delete (remove)
 	 */
@@ -177,15 +177,15 @@ class Mongo {
 		try {
 			$collection = $this->_db->{$collection};
 			$criteria = array (
-					'_id' => new \MongoId ( $id ) 
+					'_id' => new \MongoId ( $id )
 			);
 			$collection->remove ( $criteria, array (
-					'safe' => true 
+					'safe' => true
 			) );
 			$this->_conn->close ();
-			
+
 			return array (
-					'success' => 'deleted' 
+					'success' => 'deleted'
 			);
 		} catch ( \MongoException $e ) {
 			$resultback = array('error' => $e->getMessage());
@@ -193,10 +193,10 @@ class Mongo {
 			die($resultback);
 		}
 	}
-	
-	
+
+
 	/**
-	 * find one Collection  
+	 * find one Collection
 	 **/
 	public function findOne($collection, $select, $flag = false) {
 		try {
@@ -206,7 +206,7 @@ class Mongo {
 			if ($flag) {
 				$document = $this->getRefDouble($document);
 			}
-			
+
 			if ($document) {
 				$document ['_id'] = $document ['_id']->{'$id'};
 			}
@@ -216,7 +216,7 @@ class Mongo {
 			$resultback = array('error' => $e->getMessage());
             $resultback = json_encode($resultback);
 			die($resultback);
-		}	
+		}
 	}
 
 
@@ -229,16 +229,16 @@ class Mongo {
 					if ($document[$key]) {
 						$document[$key]['_id'] = $document[$key]['_id']->{'$id'};
 					}
-					
+
 				}
-				
+
 				if (is_array($value) && !\MongoDBRef::isRef($value)) {
 					$document[$key] = $this->getRefDouble($value);
 				}
 			}
-			
+
 		}
-		
+
 
 		return $document;
 	}
@@ -262,7 +262,7 @@ class Mongo {
 			$resultback = array('error' => $e->getMessage());
             $resultback = json_encode($resultback);
 			die($resultback);
-		}	
+		}
 	}
 
 	public function getRef($document, $ref) {
@@ -277,33 +277,33 @@ class Mongo {
 			$resultback = array('error' => $e->getMessage());
             $resultback = json_encode($resultback);
 			die($resultback);
-		}	
+		}
 	}
-	
-	
+
+
 	/**
 	 * Collection count
 	 */
-	
+
 	function mongoCollectionCount($collection, $query = null) {
-	
+
 		try {
 			$collection = $this->_db->{$collection};
-	
+
 			if($query) {
 				return $collection->count($query);
 			} else {
 				return $collection->count();
 			}
-	
+
 		} catch (\MongoException $e) {
 			$resultback = array('error' => $e->getMessage());
             $resultback = json_encode($resultback);
 			die($resultback);
 		}
-	
+
 	}
-	
+
 	/**
 	 * Mongo list with sorting and filtering
 	 *
@@ -321,39 +321,39 @@ class Mongo {
 	 *    )
 	 *  );
 	 */
-	
+
 	function mongoList($collection, $select = null, $flag = false) {
-	
+
 		try {
-	
+
 			$collection = $this->_db->{$collection};
-	
+
 			$criteria = NULL;
-	
+
 			// add exact match filters if they exist
-	
+
 			if(isset($select['filter']) && count($select['filter'])) {
 				$criteria = $select['filter'];
 			}
-	
+
 			// add regex match filters if they exist
-	
+
 			if(isset($select['wildcard']) && count($select['wildcard'])) {
 				foreach($select['wildcard'] as $key => $value) {
 					$criteria[$key] = new \MongoRegex($value);
 				}
 			}
-	
+
 			// get results
-	
+
 			if($criteria) {
 				$cursor = $collection->find($criteria);
 			} else {
 				$cursor = $collection->find();
 			}
-	
+
 			// sort the results if specified
-	
+
 			if(isset($select['sort']) && $select['sort'] && count($select['sort'])) {
 				$sort = array();
 				foreach($select['sort'] as $key => $value) {
@@ -361,9 +361,9 @@ class Mongo {
 				}
 				$cursor->sort($sort);
 			}
-	
+
 			// set a limit
-	
+
 			if(isset($select['limit']) && $select['limit']) {
 				if(MONGO_LIST_MAX_PAGE_SIZE && $select['limit'] > MONGO_LIST_MAX_PAGE_SIZE) {
 					$limit = MONGO_LIST_MAX_PAGE_SIZE;
@@ -373,47 +373,47 @@ class Mongo {
 			} else {
 				$limit = MONGO_LIST_DEFAULT_PAGE_SIZE;
 			}
-	
+
 			if($limit) {
 				$cursor->limit($limit);
 			}
-	
+
 			// choose a page if specified
-	
+
 			if(isset($select['page']) && $select['page']) {
 				$skip = (int)($limit * ($select['page'] - 1));
 				$cursor->skip($skip);
 			}
-	
+
 			// prepare results to be returned
-	
+
 			$output = array(
 					'total' => $cursor->count(),
 					'pages' => ceil($cursor->count() / $limit),
 					'results' => array(),
 			);
-	
+
 			foreach ($cursor as $result) {
-				
+
 				if ($flag) {
 					$result = $this->getRefDouble($result);
 				}
-				
+
 
 				// 'flattening' _id object in line with CRUD functions
 				$result['_id'] = $result['_id']->{'$id'};
 				$output['results'][] = $result;
 			}
-	
+
 			$this->_conn->close();
-	
+
 			return $output;
-	
+
 		} catch (\MongoException $e) {
 			$resultback = array('error' => $e->getMessage());
             $resultback = json_encode($resultback);
 			die($resultback);
 		}
-	
+
 	}
 }
