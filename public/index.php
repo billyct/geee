@@ -11,10 +11,19 @@ $tags = Mongo::getInstance()->mongoList('tags');
 if($tags['total'] === 0) {
 
     $tags = array(
-        array('name' => 'nodejs', 'count' => 0),
-        array('name' => 'php', 'count' => 0),
-        array('name' => 'meteor', 'count' => 0),
-        array('name' => 'go', 'count' => 0)
+        array('name' => 'nodejs'),
+        array('name' => 'php'),
+        array('name' => 'c'),
+        array('name' => 'java'),
+        array('name' => 'perl'),
+        array('name' => 'python'),
+        array('name' => 'ruby'),
+        array('name' => 'css'),
+        array('name' => 'javascript'),
+        array('name' => 'scala'),
+        array('name' => 'clojure'),
+        array('name' => 'ghost'),
+        array('name' => 'bomb'),
     );
 
     foreach($tags as $tag) {
