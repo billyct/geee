@@ -1,5 +1,7 @@
 ## geee
 ====
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/billyct/geee?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![image](https://github.com/billyct/geee/raw/master/screenshots/geee.png)
 #### 程序员匿名社区
 
